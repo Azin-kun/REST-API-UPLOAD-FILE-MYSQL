@@ -6,7 +6,6 @@ const fs = require("fs") // untuk manajemen file
 const mysql = require("mysql")
 const bodyParser = require("body-parser")
 const cors = require("cors")
-const moment = require("moment")
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
@@ -598,119 +597,6 @@ app.get("/detail_transaksi", (req, res) => {
         })
     })
 })
-
-// end point detail transaksi =======================================================================================================================================
-
-// end-point menambah data detail transaksi
-app.post("/detail_transaksi", (req,res) => {
-
-    // prepare data
-    let data = {
-        kode_transaksi: req.body.kode_transaksi,
-        kode_barang: req.body.kode_barang,
-        jumlah: req.body.jumlah,
-        harga_beli: req.body.harga_beli,
-    }
-
-    // create sql query insert
-    let sql = "insert into detail_transaksi set ?"
-
-    // run query
-    db.query(sql, data, (error, result) => {
-        let response = null
-        if (error) {
-            response = {
-                message: error.message
-            }
-        } else {
-            response = {
-                message: result.affectedRows + " data inserted"
-            }
-        }
-        res.json(response) // send response
-    })
-})
-
-// end-point mengubah data detail transaksi
-app.put("/detail_transaksi",(req,res) => {
-
-    // prepare data
-    let data = [
-        // data
-        {
-            kode_transaksi: req.body.kode_transaksi,
-            kode_barang: req.body.kode_barang,
-            jumlah: req.body.jumlah,
-            harga_beli: req.body.harga_beli,
-        },
-
-        // parameter (primary key)
-        {
-           kode_transaksi: req.body.kode_transaksi
-        }
-    ]
-
-    // create sql query update
-    let sql = "update detail_transaksi set ? where ?"
-
-    // run query
-    db.query(sql, data, (error, result) => {
-        let response = null
-        if (error) {
-            response = {
-                message: error.message
-            }
-        } else {
-            response = {
-                message: result.affectedRows + " data updated"
-            }
-        }
-        res.json(response) // send response
-    })
-})
-
-app.delete("/detail_transaksi/:kode",(req,res) => {
-    // prepare data
-    let data = {
-        kode_transaksi: req.params.kode_transaksi
-    }
-
-    // create query sql delete
-    let sql = "delete from detail_transaksi where ?"
-
-    // run query
-    db.query(sql, data, (error, result) => {
-        let response = null
-        if (error) {
-            response = {
-                message: error.message
-            }
-        } else {
-            response = {
-                message: result.affectedRows + " data deleted"
-            }
-        }
-        res.json(response) // send response
-    })
-})
-
-// endpoint ambil data detail transaksi
-app.get("/detail_transaksi", (req, res) => {
-    // create sql query
-    let sql = "select * from detail_transaksi"
-
-    // run query
-    db.query(sql, (error, result) => {
-        if (error) throw error
-        res.json({
-            data: result,
-            count: result.length
-        })
-    })
-})
-
-
-
 
 
 // konfigurasi sarver =======================================================================================================================================
